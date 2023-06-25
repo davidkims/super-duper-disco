@@ -1,0 +1,46 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE
+      - name: Check out code
+        uses: actions/checkout@v3
+      
+      # Sets up Python
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # You can specify a specific version
+      
+      # Installs dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
+      # Run Tests
+      - name: Run tests
+        run: |
+          python -m unittest discover tests  # Assumes you have a directory 'tests' with test files
+      
+      # Build the Application (for example, create a distribution package)
+      - name: Build
+        run: |
+          python setup.py sdist bdist_wheel  # Assumes you have a setup.py script for packaging
+      
+      # Optional: Publish the distribution package to PyPi if on the main branch
+      - name: Publish to PyPi
+        if: github.ref == 'refs/heads/main'  # Only if on the main branch
+        uses: pypa/gh-action-pypi-publish@v1.4.2
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}  # Store your PyPi API token as a secret in the repository
