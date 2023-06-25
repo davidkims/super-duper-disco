@@ -1,0 +1,78 @@
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+    # Runs at 12:15 every day
+    - cron: '15 12 * * *'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    # Permissions needed by the stale action
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/stale@v5
+        with:
+          # GitHub token for authentication
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Number of days of inactivity before an issue becomes stale
+          days-before-issue-stale: 60
+          
+          # Number of days of inactivity before a pull request becomes stale
+          days-before-pr-stale: 30
+          
+          # Number of days of inactivity before a stale issue is closed
+          days-before-issue-close: 7
+          
+          # Number of days of inactivity before a stale PR is closed
+          days-before-pr-close: 7
+          
+          # Message to be posted when marking an issue as stale
+          stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. Thank you for your contributions.'
+          
+          # Message to be posted when marking a pull request as stale
+          stale-pr-message: 'This pull request has been automatically marked as stale because it has not had recent activity. It will be closed if no further activity occurs. Thank you for your contributions.'
+          
+          # Label to use when marking an issue as stale
+          stale-issue-label: 'stale'
+          
+          # Label to use when marking a pull request as stale
+          stale-pr-label: 'stale'
+          
+          # Comment to be posted when closing a stale issue
+          close-issue-message: 'This issue has been automatically closed due to inactivity.'
+          
+          # Comment to be posted when closing a stale pull request
+          close-pr-message: 'This pull request has been automatically closed due to inactivity.'
+          
+          # Issues or PRs with these labels will be exempt from being marked as stale
+          exempt-labels: 'pinned,security'
+          
+          # Only issues or PRs with these labels will be considered as stale
+          only-labels: ''
+          
+          # Milestones on issues or PRs that will be exempt from being marked as stale
+          exempt-milestones: 'v1.0,v2.0'
+          
+          # Milestones on issues or PRs that will be exempt from being marked as stale
+          exempt-issue-milestones: ''
+          
+          # Milestones on issues or PRs that will be exempt from being marked as stale
+          exempt-pr-milestones: ''
+          
+          # Set to true to ignore issues in a milestone
+          exempt-all-milestones: false
+          
+          # Set to true to ignore issues that are assigned
+          exempt-all-assignees: false
+          
+          # Any issues or PRs created or updated before this date will be exempt from being marked as stale
+          exempt-created-before: ''
+          
+          # Any issues or PRs updated before this date will be exempt from being marked as stale
+          exempt-updated-before: ''
