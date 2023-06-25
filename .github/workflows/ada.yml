@@ -1,0 +1,50 @@
+name: Ada (GNAT) Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/gnat
+          key: ${{ runner.os }}-gnat-${{ hashFiles('**/*.gpr') }}
+          restore-keys: |
+            ${{ runner.os }}-gnat-
+      
+      - name: Set up GNAT toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnat gprbuild
+          
+      - name: Build
+        run: gprbuild -j0 -p
+      
+      # Optional: Run tests if you have any test cases
+      - name: Run Tests
+        run: |
+          # Insert commands to run your tests here
+      
+      # Optional: Upload artifacts (your build outputs)
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: |
+            # Specify paths to your build outputs, e.g.
+            # ./build/**
+            # ./bin/**
+
+      # Optional: Run gnatprove for additional checks (formal verification)
+      - name: Formal Verification
+        run: |
+          gnatprove -P<your_project_file.gpr> --level=0
