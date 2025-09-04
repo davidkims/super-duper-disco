@@ -40,7 +40,7 @@ jobs:
       # Optional: Publish the distribution package to PyPi if on the main branch
       - name: Publish to PyPi
         if: github.ref == 'refs/heads/main'  # Only if on the main branch
-        uses: pypa/gh-action-pypi-publish@v1.4.2
+        uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}  # Store your PyPi API token as a secret in the repository
